@@ -6,7 +6,7 @@ services:
     ports:
       - "35432:5432"
     environment:
-      POSTGRES_PASSWORD: "p455W0Rd"
+      POSTGRES_PASSWORD: "_p455W0Rd_"
       POSTGRES_DB: "projects_and_vacancies"
     #    volumes:
     #      - ""
