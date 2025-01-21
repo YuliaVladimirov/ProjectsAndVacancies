@@ -9,17 +9,17 @@ import org.springframework.format.annotation.DateTimeFormat
 data class ProjectUpdateRequest(
 
     @JsonProperty("name")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Name of the project", example = "Creating visual materials for social media")
     var name: String?,
 
     @JsonProperty("field")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Field of activity", example = "Design")
     var field: String?,
 
     @JsonProperty("experience")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Sufficient experience for the project", example = "More than 2 years")
     var experience: String?,
 
@@ -29,7 +29,7 @@ data class ProjectUpdateRequest(
     var deadline: String?,
 
     @JsonProperty("description")
-    @field:Size(min = 2, max = 150, message = "Invalid project description: Must be of 2 - 150 characters")
+    @field:Size(min = 2, message = "Invalid project description: Must be more than 2 characters")
     @Schema(description = "Description of the project", example = "This project is designed to develop eye-catching and engaging visual materials for our social media platforms. The goal is to create content that aligns with our brand identity and effectively captures our audience's attention.")
     var description: String?,
 )

@@ -10,31 +10,31 @@ data class VacancyCreateRequest (
 
     @JsonProperty("name")
     @field:NotBlank(message = "NAME field can't be empty")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Name of the vacancy", example = "Front-End Developer")
     var name: String,
 
     @JsonProperty("field")
     @field:NotBlank(message = "FIELD can't be empty")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Field of activity", example = "Design")
     var field: String,
 
     @JsonProperty("experience")
     @field:NotBlank(message = "EXPERIENCE can't be empty")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Sufficient experience for the vacancy", example = "More than 2 years")
     var experience: String,
 
     @JsonProperty("country")
     @field:NotBlank(message = "COUNTRY can't be empty")
-    @field:Size(min = 2, max = 50, message = "Invalid parameter: Must be of 2 - 50 characters")
+    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
     @Schema(description = "Location of the proposed vacancy", example = "USA")
     var country: String,
 
     @JsonProperty("description")
     @field:NotBlank(message = "DESCRIPTION field can't be empty")
-    @field:Size(min = 2, max = 150, message = "Invalid parameter: Must be of 2 - 150 characters")
+    @field:Size(min = 2, message = "Invalid vacancy description: Must be more than 2 characters")
     @Schema(description = "Description of the project", example = "We are looking for a creative and detail-oriented designer to develop eye-catching and engaging visual materials for our social media platforms.")
     var description: String,
 )
