@@ -4,10 +4,9 @@ services:
     container_name: "projects_and_vacancies_db"
     image: postgres
     ports:
-      - "35432:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: "_p455W0Rd_"
-      POSTGRES_DB: "projects_and_vacancies"
-    #    volumes:
-    #      - ""
+      POSTGRES_PASSWORD: "PASSWORD"
+      POSTGRES_DB: "projects-and-vacancies"
+      POSTGRES_USER: "USERNAME"
     restart: "unless-stopped"
