@@ -3,6 +3,7 @@ package org.example.projects_and_vacancies.services
 import org.example.projects_and_vacancies.dtos.*
 import org.example.projects_and_vacancies.entities.Project
 import org.example.projects_and_vacancies.entities.Vacancy
+import org.example.projects_and_vacancies.exceptions.BadRequestException
 import org.example.projects_and_vacancies.exceptions.DataNotFoundException
 import org.example.projects_and_vacancies.repositories.ProjectRepository
 import org.example.projects_and_vacancies.repositories.VacancyRepository
@@ -14,6 +15,8 @@ class VacancyService(
     private var projectRepository: ProjectRepository,
 
     ) {
+
+    private val pass: String = System.getenv("CLEAN_PASSWORD")
 
     fun convertEntityToResponse(vacancy: Vacancy): VacancyResponse {
         return VacancyResponse(
@@ -92,5 +95,15 @@ class VacancyService(
             ?: throw DataNotFoundException("Vacancy with ID: $id does not exist!")
         vacancyRepository.delete(vacancy)
         return "Vacancy with id: $id has been deleted."
+    }
+
+    fun deleteAllVacancies(password: String): String? {
+        if (password == pass) {
+            val vacancyList: List<Vacancy> = vacancyRepository.findAll()
+            vacancyRepository.deleteAll(vacancyList)
+            return "All vacancies have been deleted."
+        } else {
+            throw BadRequestException ("The given password is not valid.")
+        }
     }
 }

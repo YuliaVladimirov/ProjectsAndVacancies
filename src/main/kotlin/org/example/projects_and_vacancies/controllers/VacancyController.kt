@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import org.example.projects_and_vacancies.dtos.VacancyCreateRequest
 import org.example.projects_and_vacancies.dtos.VacancyResponse
 import org.example.projects_and_vacancies.dtos.VacancyUpdateRequest
@@ -77,4 +79,15 @@ class VacancyController(private var vacancyService: VacancyService) {
         id: Long
     ): ResponseEntity<String> =
         ResponseEntity(vacancyService.deleteVacancyById(id), HttpStatus.OK)
+
+    @DeleteMapping("/vacancies")
+    @Operation(summary = "DEMO MODE Cleaning the vacancies table in the database", description = "DEMO MODE Provides functionality for deleting all vacancies")
+    fun deleteAllVacancies(
+        @RequestParam
+        @NotBlank(message = "PASSWORD can't be empty")
+        @Size(min = 5, message = "Invalid password: Must be more than 5 characters")
+        @Parameter(description = "Password for authenticated access")
+        password: String
+    ): ResponseEntity<String> =
+        ResponseEntity(vacancyService.deleteAllVacancies(password), HttpStatus.OK)
 }

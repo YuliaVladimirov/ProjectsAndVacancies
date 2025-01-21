@@ -7,6 +7,7 @@ import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
 import org.example.projects_and_vacancies.dtos.ProjectCreateRequest
 import org.example.projects_and_vacancies.dtos.ProjectResponse
 import org.example.projects_and_vacancies.dtos.ProjectUpdateRequest
@@ -90,4 +91,15 @@ class ProjectController(private var projectService: ProjectService) {
         id: Long
     ): ResponseEntity<String> =
         ResponseEntity(projectService.deleteProjectById(id), HttpStatus.OK)
+
+    @DeleteMapping("/projects")
+    @Operation(summary = "DEMO MODE Cleaning the projects table in the database", description = "DEMO MODE Provides functionality for deleting all projects")
+    fun deleteAllProjects(
+        @RequestParam
+        @NotBlank(message = "PASSWORD can't be empty")
+        @Size(min = 5, message = "Invalid password: Must be more than 5 characters")
+        @Parameter(description = "Password for authenticated access")
+        password: String
+    ): ResponseEntity<String> =
+        ResponseEntity(projectService.deleteAllProjects(password), HttpStatus.OK)
 }

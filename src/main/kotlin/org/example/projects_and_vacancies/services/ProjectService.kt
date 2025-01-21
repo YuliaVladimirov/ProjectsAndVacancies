@@ -1,10 +1,12 @@
 package org.example.projects_and_vacancies.services
 
+import lombok.Value
 import lombok.extern.slf4j.Slf4j
 import org.example.projects_and_vacancies.dtos.ProjectCreateRequest
 import org.example.projects_and_vacancies.dtos.ProjectResponse
 import org.example.projects_and_vacancies.dtos.ProjectUpdateRequest
 import org.example.projects_and_vacancies.entities.Project
+import org.example.projects_and_vacancies.exceptions.BadRequestException
 import org.example.projects_and_vacancies.exceptions.DataNotFoundException
 import org.example.projects_and_vacancies.repositories.ProjectRepository
 import org.springframework.data.domain.Page
@@ -20,8 +22,9 @@ import java.time.format.DateTimeFormatter
 @Slf4j
 class ProjectService(
     private var projectRepository: ProjectRepository
-
 ) {
+
+    private val pass: String = System.getenv("CLEAN_PASSWORD")
 
     fun convertEntityToResponse(project: Project): ProjectResponse {
         return ProjectResponse(
@@ -99,5 +102,16 @@ class ProjectService(
         return "Project with id: $id has been deleted."
     }
 
+
+
+    fun deleteAllProjects(password: String): String? {
+        if (password == pass) {
+            val projectList: List<Project> = projectRepository.findAll()
+            projectRepository.deleteAll(projectList)
+            return "All projects have been deleted."
+        } else {
+            throw BadRequestException ("The given password is not valid.")
+        }
+    }
 
 }
