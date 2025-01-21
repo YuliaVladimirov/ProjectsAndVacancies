@@ -10,3 +10,15 @@ services:
       POSTGRES_DB: "projects-and-vacancies"
       POSTGRES_USER: "USERNAME"
     restart: "unless-stopped"
+
+  app:
+    container_name: "projects_and_vacancies_app"
+    image: gradle
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/projects-and-vacancies"
+    volumes:
+      - ./.:/host
+    working_dir: /host
+    command: "bash gradlew bootRun"

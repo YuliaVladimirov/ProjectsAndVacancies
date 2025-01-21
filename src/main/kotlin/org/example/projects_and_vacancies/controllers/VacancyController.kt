@@ -2,6 +2,7 @@ package org.example.projects_and_vacancies.controllers
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping
 @Validated
+@Tag(name = "Vacancies controller", description = "Controller for managing vacancies")
 class VacancyController(private var vacancyService: VacancyService) {
 
     @GetMapping("/projects/{id}/vacancies")
