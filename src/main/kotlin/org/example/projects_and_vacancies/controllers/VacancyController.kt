@@ -83,7 +83,7 @@ class VacancyController(private var vacancyService: VacancyService) {
         ResponseEntity(vacancyService.deleteVacancyById(id), HttpStatus.OK)
 
     @DeleteMapping("/vacancies")
-    @Operation(summary = "DEMO MODE Cleaning the vacancies table in the database", description = "DEMO MODE Provides functionality for deleting all vacancies")
+    @Operation(summary = "DO NOT TRY TO USE - demo reset, cleans the vacancies table", description = "DO NOT TRY TO USE - demo reset functionality")
     fun deleteAllVacancies(
         @RequestParam
         @NotBlank(message = "PASSWORD can't be empty")

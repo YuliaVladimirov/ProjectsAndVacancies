@@ -93,7 +93,7 @@ class ProjectController(private var projectService: ProjectService) {
         ResponseEntity(projectService.deleteProjectById(id), HttpStatus.OK)
 
     @DeleteMapping("/projects")
-    @Operation(summary = "DEMO MODE Cleaning the projects table in the database", description = "DEMO MODE Provides functionality for deleting all projects")
+    @Operation(summary = "DO NOT TRY TO USE - demo reset, cleans the projects table", description = "DO NOT TRY TO USE - demo reset functionality")
     fun deleteAllProjects(
         @RequestParam
         @NotBlank(message = "PASSWORD can't be empty")
