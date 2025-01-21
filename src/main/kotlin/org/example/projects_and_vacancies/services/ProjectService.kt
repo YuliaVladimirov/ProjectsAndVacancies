@@ -1,6 +1,5 @@
 package org.example.projects_and_vacancies.services
 
-import lombok.Value
 import lombok.extern.slf4j.Slf4j
 import org.example.projects_and_vacancies.dtos.ProjectCreateRequest
 import org.example.projects_and_vacancies.dtos.ProjectResponse
@@ -24,7 +23,7 @@ class ProjectService(
     private var projectRepository: ProjectRepository
 ) {
 
-    private val pass: String = System.getenv("CLEAN_PASSWORD")
+    private val pass: String = System.getenv("CLEAN_PASSWORD") ?: "-"
 
     fun convertEntityToResponse(project: Project): ProjectResponse {
         return ProjectResponse(

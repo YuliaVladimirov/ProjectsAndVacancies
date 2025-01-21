@@ -16,7 +16,7 @@ class VacancyService(
 
     ) {
 
-    private val pass: String = System.getenv("CLEAN_PASSWORD")
+    private val pass: String = System.getenv("CLEAN_PASSWORD") ?: "-"
 
     fun convertEntityToResponse(vacancy: Vacancy): VacancyResponse {
         return VacancyResponse(
