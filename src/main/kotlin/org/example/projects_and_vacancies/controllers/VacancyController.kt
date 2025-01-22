@@ -25,7 +25,7 @@ class VacancyController(private var vacancyService: VacancyService) {
     @GetMapping("/projects/{id}/vacancies")
     @Operation(summary = "Getting vacancies", description = "Provides functionality for getting  all vacancies for certain project")
     fun getAllVacancies(
-        @PathVariable
+        @PathVariable(required = true)
         @Min(value = 1, message = "Invalid ID: Id must be greater than or equal to 1")
         @Parameter(description = "Project identifier")
         id: Long
