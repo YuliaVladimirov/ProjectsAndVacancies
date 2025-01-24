@@ -34,11 +34,11 @@ class ProjectController(private var projectService: ProjectService) {
 
         @RequestParam(defaultValue = "0")
         @Min(value = 0, message = "Invalid parameter: Page numeration starts from 0")
-        @Parameter(description = "Number of page to display")
+        @Parameter(description = "Page number to display")
         page: Int,
 
         @RequestParam(defaultValue = "id")
-        @NotBlank(message = "SortBy field can't be empty.")
+        @Pattern(regexp = "^(id|name|field|experience|deadline)$", message = "Invalid value: Must be one of the following: id, name, field, experience, deadline")
         @Parameter(description = "The field the elements are sorted by")
         sortBy: String,
 
