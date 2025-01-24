@@ -12,7 +12,7 @@ import org.example.projects_and_vacancies.dtos.ProjectCreateRequest
 import org.example.projects_and_vacancies.dtos.ProjectResponse
 import org.example.projects_and_vacancies.dtos.ProjectUpdateRequest
 import org.example.projects_and_vacancies.services.ProjectService
-import org.springframework.data.domain.Page
+import org.springframework.data.web.PagedModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -46,7 +46,7 @@ class ProjectController(private var projectService: ProjectService) {
         @Pattern(regexp = "^(ASC|DESC|asc|desc)$", message = "Invalid order: Must be ASC or DESC (asc or desc)")//
         @Parameter(description = "Sorting parameters in ascending and descending order")
         order: String
-    ): ResponseEntity<Page<ProjectResponse>> =
+    ): ResponseEntity<PagedModel<ProjectResponse>> =
         ResponseEntity(projectService.getAllProjects(size, page, sortBy, order), HttpStatus.OK)
 
     @GetMapping("/projects/{id}")

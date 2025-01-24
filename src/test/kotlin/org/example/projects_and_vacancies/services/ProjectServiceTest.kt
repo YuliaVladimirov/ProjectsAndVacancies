@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.*
+import org.springframework.data.web.PagedModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -114,11 +115,12 @@ class ProjectServiceTest {
     fun getAllProjects() {
         val pageable: Pageable = PageRequest.of(0, 1, Sort.Direction.fromString("asc"), "id")
         val projectPage: Page<Project> = PageImpl(mutableListOf(project))
+        val pagedModel = PagedModel(projectPage)
 
         every { projectRepositoryMock.findAll(pageable) } returns projectPage
-        val actualPage: Page<ProjectResponse>? = projectServiceMock.getAllProjects(1, 0, "id", "asc")
-        assertNotNull(actualPage)
-        assertThat(actualPage).hasSameClassAs(projectPage)
+        val actualModelPage: PagedModel<ProjectResponse>? = projectServiceMock.getAllProjects(1, 0, "id", "asc")
+        assertNotNull(actualModelPage)
+        assertThat(actualModelPage).hasSameClassAs(pagedModel)
 
         verify(atLeast = 1) { projectRepositoryMock.findAll(pageable) }
     }

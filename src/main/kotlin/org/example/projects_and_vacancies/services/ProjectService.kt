@@ -8,10 +8,10 @@ import org.example.projects_and_vacancies.entities.Project
 import org.example.projects_and_vacancies.exceptions.BadRequestException
 import org.example.projects_and_vacancies.exceptions.DataNotFoundException
 import org.example.projects_and_vacancies.repositories.ProjectRepository
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.data.web.PagedModel
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -53,9 +53,9 @@ class ProjectService(
         return convertEntityToResponse(savedProject)
     }
 
-    fun getAllProjects(size: Int, page: Int, sortBy: String, order: String): Page<ProjectResponse>? {
+    fun getAllProjects(size: Int, page: Int, sortBy: String, order: String): PagedModel<ProjectResponse>? {
         val pageable: Pageable = PageRequest.of(page, size, Sort.Direction.fromString(order), sortBy)
-        return projectRepository.findAll(pageable).map(this::convertEntityToResponse)
+        return PagedModel(projectRepository.findAll(pageable).map(this::convertEntityToResponse))
     }
 
 

@@ -7,7 +7,11 @@ import org.example.projects_and_vacancies.exceptions.BadRequestException
 import org.example.projects_and_vacancies.exceptions.DataNotFoundException
 import org.example.projects_and_vacancies.repositories.ProjectRepository
 import org.example.projects_and_vacancies.repositories.VacancyRepository
+import org.springframework.data.domain.*
+import org.springframework.data.web.PagedModel
 import org.springframework.stereotype.Service
+import kotlin.math.min
+
 
 @Service
 class VacancyService(
@@ -50,10 +54,45 @@ class VacancyService(
     }
 
 
-    fun getAllVacancies(id: Long): List<VacancyResponse>? {
+//    fun getAllVacancies(id: Long): List<VacancyResponse>? {
+//        val project: Project = projectRepository.findById(id).orElse(null)
+//            ?: throw DataNotFoundException("Project with ID: $id does not exist!")
+//        return project.vacancies.map(this::convertEntityToResponse)
+//    }
+
+
+    fun getAllVacancies(id: Long, size: Int, page: Int, sortBy: String, order: String): PagedModel<VacancyResponse> {
         val project: Project = projectRepository.findById(id).orElse(null)
             ?: throw DataNotFoundException("Project with ID: $id does not exist!")
-        return project.vacancies.map(this::convertEntityToResponse)
+
+        val vacancyList = project.vacancies
+
+        if (order.lowercase() == "asc") {
+            when (sortBy) {
+                "id" -> vacancyList.sortBy { it.id }
+                "name" -> vacancyList.sortBy { it.name }
+                "field" -> vacancyList.sortBy { it.field }
+                "experience" -> vacancyList.sortBy { it.experience }
+                "country" -> vacancyList.sortBy { it.country }
+            }
+        } else {
+            when (sortBy) {
+                "id" -> vacancyList.sortByDescending { it.id }
+                "name" -> vacancyList.sortByDescending { it.name }
+                "field" -> vacancyList.sortByDescending { it.field }
+                "experience" -> vacancyList.sortByDescending { it.experience }
+                "country" -> vacancyList.sortByDescending { it.country }
+            }
+        }
+
+        val pageable = PageRequest.of(page, size)
+
+        val start = pageable.offset.toInt()
+        val end = min((start + pageable.pageSize).toDouble(), vacancyList.size.toDouble()).toInt()
+        val pageContent: List<Vacancy> = vacancyList.subList(start, end)
+        val vacancyPage = PageImpl(pageContent, pageable, vacancyList.size.toLong())
+
+        return PagedModel(vacancyPage.map(this::convertEntityToResponse))
     }
 
     fun getVacancyById(id: Long): VacancyResponse? {
@@ -103,7 +142,7 @@ class VacancyService(
             vacancyRepository.deleteAll(vacancyList)
             return "All vacancies have been deleted."
         } else {
-            throw BadRequestException ("The given password is not valid.")
+            throw BadRequestException("The given password is not valid.")
         }
     }
 }

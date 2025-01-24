@@ -10,6 +10,9 @@ import org.example.projects_and_vacancies.services.VacancyService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.web.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -36,18 +39,27 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
             "Some description"
         )
 
-        val projectList: List<VacancyResponse> = listOf(vacancyResponse)
+        val vacancyPage: Page<VacancyResponse> = PageImpl(mutableListOf(vacancyResponse))
 
-        every{ vacancyServiceMock.getAllVacancies(id) } returns projectList;
+        val size = 1
+        val page = 0
+        val sortBy = "id"
+        val order = "ASC"
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/projects/{id}/vacancies", id))
+        val pagedModel = PagedModel(vacancyPage)
+
+
+//        val projectList: List<VacancyResponse> = listOf(vacancyResponse)
+
+        every{ vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order) } returns pagedModel
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/projects/{id}/vacancies?size=1&page=0&sortBy=id&order=ASC", id))
 
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.size()").value(projectList.size))
 
         io.mockk.verify(atLeast = 1) {
-            vacancyServiceMock.getAllVacancies(id)
+            vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order)
         }
     }
 
@@ -65,7 +77,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
             "Some description"
         )
 
-        every { vacancyServiceMock.getVacancyById(id) } returns vacancyResponse;
+        every { vacancyServiceMock.getVacancyById(id) } returns vacancyResponse
 
         mockMvc.perform(MockMvcRequestBuilders.get("/vacancies/{id}", id))
         .andExpect(status().isOk)
@@ -99,7 +111,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
             "Some description"
         )
 
-        every { vacancyServiceMock.createVacancy(id, vacancyCreateRequest) } returns vacancyResponse;
+        every { vacancyServiceMock.createVacancy(id, vacancyCreateRequest) } returns vacancyResponse
 
         mockMvc.perform(MockMvcRequestBuilders.post("/projects/{id}/vacancies", id)
             .content(mapper.writeValueAsString(vacancyCreateRequest)).contentType(MediaType.APPLICATION_JSON))
@@ -135,7 +147,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
             "Some description"
         )
 
-        every { vacancyServiceMock.updateVacancyById(id,vacancyUpdateRequest) } returns vacancyResponse;
+        every { vacancyServiceMock.updateVacancyById(id,vacancyUpdateRequest) } returns vacancyResponse
 
         mockMvc.perform(MockMvcRequestBuilders.put("/vacancies/{id}", id)
             .content(mapper.writeValueAsString(vacancyUpdateRequest)).contentType(MediaType.APPLICATION_JSON))
@@ -155,7 +167,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
         val id: Long = 1
         val message = "text/plain;charset=UTF-8"
 
-        every { vacancyServiceMock.deleteVacancyById(id) } returns message;
+        every { vacancyServiceMock.deleteVacancyById(id) } returns message
         mockMvc.perform(MockMvcRequestBuilders.delete("/vacancies/{id}", id))
         .andExpect(status().isOk)
         .andExpect(content().contentType(MediaType.parseMediaType(message)))

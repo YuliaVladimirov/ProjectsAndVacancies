@@ -19,6 +19,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.web.PagedModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -150,6 +153,11 @@ class VacancyServiceTest {
     @Test
     fun getAllVacancies() {
         val id: Long = 1
+        val size = 1
+        val page = 0
+        val sortBy = "id"
+        val order = "ASC"
+
         val vacancyList: MutableList<Vacancy> = mutableListOf(vacancy)
         project.vacancies = vacancyList
         val projectOptional: Optional<Project> = Optional.ofNullable(project)
@@ -159,10 +167,16 @@ class VacancyServiceTest {
         val foundProject: Optional<Project> = projectRepositoryMock.findById(id)
         assertThat(foundProject.get().id).isEqualTo(id)
 
-        val actualList: List<VacancyResponse>? = vacancyServiceMock.getAllVacancies(id)
+        val vacancyPage: Page<VacancyResponse> = PageImpl(mutableListOf(vacancyResponse))
 
-        assertNotNull(actualList)
-        assertThat(actualList).hasSameClassAs(vacancyList)
+
+
+        val pagedModel = PagedModel(vacancyPage)
+
+        val actualPagedModel: PagedModel<VacancyResponse> = vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order)
+
+        assertNotNull(actualPagedModel)
+        assertThat(actualPagedModel).hasSameClassAs(pagedModel)
 
         verify(atLeast = 1) { projectRepositoryMock.findById(id) }
     }
@@ -170,10 +184,14 @@ class VacancyServiceTest {
     @Test
     fun getAllVacanciesThrowsException() {
         val id: Long = 2
+        val size = 1
+        val page = 0
+        val sortBy = "id"
+        val order = "ASC"
         val projectOptional: Optional<Project> = Optional.ofNullable(null)
         every { projectRepositoryMock.findById(id) } returns projectOptional
 
-        val exception = assertThrows<DataNotFoundException> { vacancyServiceMock.getAllVacancies(id) }
+        val exception = assertThrows<DataNotFoundException> { vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order) }
         assertThat(exception.message).isEqualTo("Project with ID: $id does not exist!")
         verify(atLeast = 1) { projectRepositoryMock.findById(id) }
     }
