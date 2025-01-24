@@ -27,7 +27,7 @@ class ProjectController(private var projectService: ProjectService) {
     @GetMapping("/projects")
     @Operation(summary = "Getting projects", description = "Provides functionality for getting  all projects")
     fun getAllProjects(
-        @RequestParam(defaultValue = "1")
+        @RequestParam(defaultValue = "10")
         @Min(value = 1, message = "Invalid parameter: Size must be greater than or equal to 1")
         @Parameter(description = "Number of elements per one page")
         size: Int,
