@@ -111,5 +111,4 @@ class ProjectService(
             throw BadRequestException ("The given password is not valid.")
         }
     }
-
 }

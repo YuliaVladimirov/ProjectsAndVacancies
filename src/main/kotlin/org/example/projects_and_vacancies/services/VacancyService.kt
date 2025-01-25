@@ -55,7 +55,7 @@ class VacancyService(
 
 
     fun getAllVacancies(id: Long, size: Int, page: Int, sortBy: String, order: String): PagedModel<VacancyResponse> {
-        projectRepository.existsById(id)
+
         val project: Project = projectRepository.findById(id).orElse(null)
             ?: throw DataNotFoundException("Project with ID: $id does not exist!")
 

@@ -116,7 +116,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
         mockMvc.perform(MockMvcRequestBuilders.post("/projects/{id}/vacancies", id)
             .content(mapper.writeValueAsString(vacancyCreateRequest)).contentType(MediaType.APPLICATION_JSON))
 
-        .andExpect(status().isOk)
+        .andExpect(status().isCreated)
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name").value(vacancyCreateRequest.name))
 
