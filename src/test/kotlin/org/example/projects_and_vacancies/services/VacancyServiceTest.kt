@@ -255,26 +255,25 @@ class VacancyServiceTest {
     @Test
     fun deleteVacancyById() {
         val id: Long = 1
-        val vacancyOptional: Optional<Vacancy> = Optional.ofNullable(vacancy)
 
-        every { vacancyRepositoryMock.findById(id) } returns vacancyOptional
+        every { vacancyRepositoryMock.existsById(id) } returns true
         vacancyServiceMock.deleteVacancyById(id)
 
-        verify(atLeast = 1) { vacancyRepositoryMock.findById(id) }
-        verify(atLeast = 1) { vacancyRepositoryMock.delete(any(Vacancy::class)) }
+        verify(atLeast = 1) { vacancyRepositoryMock.existsById(id) }
+        verify(atLeast = 1) { vacancyRepositoryMock.deleteById(id) }
     }
 
     @Test
     fun deleteVacancyByIdThrowsException() {
         val id: Long = 2
-        val vacancyOptional: Optional<Vacancy> = Optional.ofNullable(null)
-        every { vacancyRepositoryMock.findById(id) } returns vacancyOptional
+
+        every { vacancyRepositoryMock.existsById(id) } returns false
 
         val exception =
             assertThrows<DataNotFoundException> { vacancyServiceMock.deleteVacancyById(id) }
         assertThat(exception.message).isEqualTo("Vacancy with ID: $id does not exist!")
 
-        verify(atLeast = 1) { vacancyRepositoryMock.findById(id) }
+        verify(atLeast = 1) { vacancyRepositoryMock.existsById(id) }
         verify(atLeast = 0) { vacancyRepositoryMock.delete(any(Vacancy::class)) }
     }
 }

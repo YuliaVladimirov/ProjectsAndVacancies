@@ -185,24 +185,23 @@ class ProjectServiceTest {
     @Test
     fun deleteProjectById() {
         val id: Long = 1
-        val projectOptional: Optional<Project> = Optional.ofNullable(project)
 
-        every { projectRepositoryMock.findById(id) } returns projectOptional
+        every { projectRepositoryMock.existsById(id) } returns true
         projectServiceMock.deleteProjectById(id)
 
-        verify(atLeast = 1) { projectRepositoryMock.findById(id) }
-        verify(atLeast = 1) { projectRepositoryMock.delete(any(Project::class)) }
+        verify(atLeast = 1) { projectRepositoryMock.existsById(id) }
+        verify(atLeast = 1) { projectRepositoryMock.deleteById(id) }
     }
 
     @Test
     fun deleteProjectByIdThrowsException() {
         val id: Long = 2
-        val projectOptional: Optional<Project> = Optional.ofNullable(null)
-        every { projectRepositoryMock.findById(id) } returns projectOptional
+
+        every { projectRepositoryMock.existsById(id) } returns false
 
         val exception = assertThrows<DataNotFoundException> { projectServiceMock.deleteProjectById(id) }
         assertThat(exception.message).isEqualTo("Project with ID: $id does not exist!")
-        verify(atLeast = 1) { projectRepositoryMock.findById(id) }
+        verify(atLeast = 1) { projectRepositoryMock.existsById(id) }
         verify(atLeast = 0) { projectRepositoryMock.delete(any(Project::class))  }
     }
 }
