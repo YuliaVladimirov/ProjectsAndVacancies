@@ -54,14 +54,8 @@ class VacancyService(
     }
 
 
-//    fun getAllVacancies(id: Long): List<VacancyResponse>? {
-//        val project: Project = projectRepository.findById(id).orElse(null)
-//            ?: throw DataNotFoundException("Project with ID: $id does not exist!")
-//        return project.vacancies.map(this::convertEntityToResponse)
-//    }
-
-
     fun getAllVacancies(id: Long, size: Int, page: Int, sortBy: String, order: String): PagedModel<VacancyResponse> {
+        projectRepository.existsById(id)
         val project: Project = projectRepository.findById(id).orElse(null)
             ?: throw DataNotFoundException("Project with ID: $id does not exist!")
 
@@ -130,10 +124,12 @@ class VacancyService(
     }
 
     fun deleteVacancyById(id: Long): String? {
-        val vacancy: Vacancy = vacancyRepository.findById(id).orElse(null)
-            ?: throw DataNotFoundException("Vacancy with ID: $id does not exist!")
-        vacancyRepository.delete(vacancy)
-        return "Vacancy with id: $id has been deleted."
+        if(vacancyRepository.existsById(id)){
+            vacancyRepository.deleteById(id)
+            return "Vacancy with id: $id has been deleted."
+        } else{
+            throw DataNotFoundException("Vacancy with ID: $id does not exist!")
+        }
     }
 
     fun deleteAllVacancies(password: String): String? {

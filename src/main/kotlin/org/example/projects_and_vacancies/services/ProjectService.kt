@@ -37,7 +37,6 @@ class ProjectService(
     }
 
     fun convertRequestToEntity(projectCreateRequest: ProjectCreateRequest): Project {
-//        var formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         return Project(
             0,
             projectCreateRequest.name,
@@ -95,13 +94,13 @@ class ProjectService(
     }
 
     fun deleteProjectById(id: Long): String? {
-        val project: Project = projectRepository.findById(id).orElse(null)
-            ?: throw DataNotFoundException("Project with ID: $id does not exist!")
-        projectRepository.delete(project)
-        return "Project with id: $id has been deleted."
+        if(projectRepository.existsById(id)){
+            projectRepository.deleteById(id)
+            return "Project with id: $id has been deleted."
+        } else{
+            throw DataNotFoundException("Project with ID: $id does not exist!")
+        }
     }
-
-
 
     fun deleteAllProjects(password: String): String? {
         if (password == pass) {

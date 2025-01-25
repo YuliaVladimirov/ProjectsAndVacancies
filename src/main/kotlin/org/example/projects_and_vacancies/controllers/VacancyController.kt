@@ -24,16 +24,6 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Vacancies controller", description = "Controller for managing vacancies")
 class VacancyController(private var vacancyService: VacancyService) {
 
-//    @GetMapping("/projects/{id}/vacancies")
-//    @Operation(summary = "Getting vacancies", description = "Provides functionality for getting  all vacancies for certain project")
-//    fun getAllVacancies(
-//        @PathVariable(required = true)
-//        @Min(value = 1, message = "Invalid ID: Id must be greater than or equal to 1")
-//        @Parameter(description = "Project identifier")
-//        id: Long
-//    ): ResponseEntity<List<VacancyResponse>> =
-//        ResponseEntity(vacancyService.getAllVacancies(id), HttpStatus.OK)
-
     @GetMapping("/projects/{id}/vacancies")
     @Operation(summary = "Getting vacancies", description = "Provides functionality for getting  all vacancies for certain project")
     fun getAllVacancies(
@@ -89,7 +79,7 @@ class VacancyController(private var vacancyService: VacancyService) {
         @Valid
         vacancyCreateRequest: VacancyCreateRequest
     ): ResponseEntity<VacancyResponse> =
-        ResponseEntity(vacancyService.createVacancy(id, vacancyCreateRequest), HttpStatus.OK)
+        ResponseEntity(vacancyService.createVacancy(id, vacancyCreateRequest), HttpStatus.CREATED)
 
 
     @PutMapping("/vacancies/{id}")
