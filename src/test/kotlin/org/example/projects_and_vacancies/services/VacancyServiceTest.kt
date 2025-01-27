@@ -19,8 +19,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PagedModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -151,49 +153,36 @@ class VacancyServiceTest {
     }
 
     @Test
-    fun getAllVacancies() {
-        val id: Long = 1
-        val size = 1
-        val page = 0
-        val sortBy = "id"
-        val order = "ASC"
+    fun getAllVacanciesByProjectId() {
 
-        val vacancyList: MutableList<Vacancy> = mutableListOf(vacancy)
-        project.vacancies = vacancyList
-        val projectOptional: Optional<Project> = Optional.ofNullable(project)
+        val projectId: Long = 1
+        val pageable: Pageable = PageRequest.of(0, 1, Sort.Direction.fromString("asc"), "id")
+        val vacancyPage = PageImpl(mutableListOf(vacancy))
+        val vacancyResponsePage = vacancyPage.map { this.convertEntityToResponse() }
+        val pagedModel = PagedModel(vacancyResponsePage)
 
-        every { projectRepositoryMock.findById(id) } returns projectOptional
+        every { projectRepositoryMock.existsById(projectId) } returns true
+        every { vacancyRepositoryMock.findAllByProjectId(projectId,pageable) } returns vacancyPage
 
-        val foundProject: Optional<Project> = projectRepositoryMock.findById(id)
-        assertThat(foundProject.get().id).isEqualTo(id)
+        val actualModelPage: PagedModel<VacancyResponse>? = vacancyServiceMock.getAllVacanciesByProjectId(1,1, 0, "id", "asc")
 
-        val vacancyPage: Page<VacancyResponse> = PageImpl(mutableListOf(vacancyResponse))
+        assertNotNull(actualModelPage)
+        assertThat(actualModelPage).hasSameClassAs(pagedModel)
 
-
-
-        val pagedModel = PagedModel(vacancyPage)
-
-        val actualPagedModel: PagedModel<VacancyResponse> = vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order)
-
-        assertNotNull(actualPagedModel)
-        assertThat(actualPagedModel).hasSameClassAs(pagedModel)
-
-        verify(atLeast = 1) { projectRepositoryMock.findById(id) }
+        verify(atLeast = 1) { projectRepositoryMock.existsById(projectId) }
+        verify(atLeast = 1) { vacancyRepositoryMock.findAllByProjectId(projectId,pageable) }
     }
 
     @Test
-    fun getAllVacanciesThrowsException() {
-        val id: Long = 2
-        val size = 1
-        val page = 0
-        val sortBy = "id"
-        val order = "ASC"
-        val projectOptional: Optional<Project> = Optional.ofNullable(null)
-        every { projectRepositoryMock.findById(id) } returns projectOptional
+    fun getAllVacanciesByProjectIdThrowsException() {
+        val projectId: Long = 2
 
-        val exception = assertThrows<DataNotFoundException> { vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order) }
-        assertThat(exception.message).isEqualTo("Project with ID: $id does not exist!")
-        verify(atLeast = 1) { projectRepositoryMock.findById(id) }
+        every { projectRepositoryMock.existsById(projectId) } returns false
+
+        val exception = assertThrows<DataNotFoundException> { vacancyServiceMock.getAllVacanciesByProjectId(projectId,1, 0, "id", "asc") }
+        assertThat(exception.message).isEqualTo("Project with ID: $projectId does not exist!")
+
+        verify(atLeast = 1) { projectRepositoryMock.existsById(projectId)}
     }
 
     @Test

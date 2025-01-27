@@ -1,6 +1,5 @@
 package org.example.projects_and_vacancies.services
 
-import lombok.extern.slf4j.Slf4j
 import org.example.projects_and_vacancies.dtos.ProjectCreateRequest
 import org.example.projects_and_vacancies.dtos.ProjectResponse
 import org.example.projects_and_vacancies.dtos.ProjectUpdateRequest
@@ -16,9 +15,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 @Service
-@Slf4j
 class ProjectService(
     private var projectRepository: ProjectRepository
 ) {

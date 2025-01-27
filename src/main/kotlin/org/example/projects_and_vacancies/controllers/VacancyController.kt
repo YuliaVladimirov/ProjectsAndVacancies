@@ -26,7 +26,7 @@ class VacancyController(private var vacancyService: VacancyService) {
 
     @GetMapping("/projects/{id}/vacancies")
     @Operation(summary = "Getting vacancies", description = "Provides functionality for getting  all vacancies for certain project")
-    fun getAllVacancies(
+    fun getAllVacanciesByProjectId(
         @PathVariable(required = true)
         @Min(value = 1, message = "Invalid ID: Id must be greater than or equal to 1")
         @Parameter(description = "Project identifier")
@@ -53,7 +53,7 @@ class VacancyController(private var vacancyService: VacancyService) {
         order: String
 
     ): ResponseEntity<PagedModel<VacancyResponse>> =
-        ResponseEntity(vacancyService.getAllVacancies(id, size, page, sortBy, order), HttpStatus.OK)
+        ResponseEntity(vacancyService.getAllVacanciesByProjectId(id, size, page, sortBy, order), HttpStatus.OK)
 
 
 

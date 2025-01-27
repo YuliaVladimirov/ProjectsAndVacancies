@@ -114,11 +114,13 @@ class ProjectServiceTest {
     @Test
     fun getAllProjects() {
         val pageable: Pageable = PageRequest.of(0, 1, Sort.Direction.fromString("asc"), "id")
-        val projectPage: Page<Project> = PageImpl(mutableListOf(project))
-        val pagedModel = PagedModel(projectPage)
+        val projectPage = PageImpl(mutableListOf(project))
+        val projectResponsePage = projectPage.map { this.convertEntityToResponse() }
+        val pagedModel = PagedModel(projectResponsePage)
 
         every { projectRepositoryMock.findAll(pageable) } returns projectPage
         val actualModelPage: PagedModel<ProjectResponse>? = projectServiceMock.getAllProjects(1, 0, "id", "asc")
+
         assertNotNull(actualModelPage)
         assertThat(actualModelPage).hasSameClassAs(pagedModel)
 

@@ -51,7 +51,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
 
 //        val projectList: List<VacancyResponse> = listOf(vacancyResponse)
 
-        every{ vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order) } returns pagedModel
+        every{ vacancyServiceMock.getAllVacanciesByProjectId(id, size, page, sortBy, order) } returns pagedModel
 
         mockMvc.perform(MockMvcRequestBuilders.get("/projects/{id}/vacancies?size=1&page=0&sortBy=id&order=ASC", id))
 
@@ -59,7 +59,7 @@ class VacancyControllerTest(@Autowired private val mockMvc: MockMvc) {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
         io.mockk.verify(atLeast = 1) {
-            vacancyServiceMock.getAllVacancies(id, size, page, sortBy, order)
+            vacancyServiceMock.getAllVacanciesByProjectId(id, size, page, sortBy, order)
         }
     }
 
