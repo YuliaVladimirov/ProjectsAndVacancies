@@ -17,15 +17,17 @@ The application provides basic CRUD functionality for projects and for vacancies
 
 ### Application Deployed on Azure
 
-The base URL of the deployed backend application is: `https://projects-and-vacancies.azurewebsites.net`
+__DISABLED__: The deployemnt to Azure has been disabled.
 
-The application exposes two endpoints:
+> The base URL of the deployed backend application is: `https://projects-and-vacancies.azurewebsites.net`
 
-[/projects](http://projects-and-vacancies.azurewebsites.net/projects)
+> The application exposes two endpoints:
 
-[/projects/{id}/vacancies](http://projects-and-vacancies.azurewebsites.net/projects/1/vacancies)
+> [/projects](http://projects-and-vacancies.azurewebsites.net/projects)
 
-The easiest way to explore the API is through the built-in [Swagger UI](https://projects-and-vacancies.azurewebsites.net/swagger-ui/index.html#/). It has both the full list of API endpoints and the detailed description with examples. The API requests can be made directly through Swagger UI.
+> [/projects/{id}/vacancies](http://projects-and-vacancies.azurewebsites.net/projects/1/vacancies)
+
+> The easiest way to explore the API is through the built-in [Swagger UI](https://projects-and-vacancies.azurewebsites.net/swagger-ui/index.html#/). It has both the full list of API endpoints and the detailed description with examples. The API requests can be made directly through Swagger UI.
 
 ### Running the Application Locally
 
